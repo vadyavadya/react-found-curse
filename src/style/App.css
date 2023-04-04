@@ -70,4 +70,5 @@ button {
 }
 .pagination__item_active {
     color: orange;
+    cursor: default;
 }

@@ -15,6 +15,8 @@ import PostService from "./API/PostService";
 import Loader from "./components/loader/Loader";
 import { useFetching } from "./hooks/useFetching";
 import { countPages, getPagination } from "./utils/pages";
+import { usePagination } from "./hooks/usePagination";
+import Pagination from "./components/pagination/Pagination";
 
 
 function App() {
@@ -27,7 +29,7 @@ function App() {
   }
 
   const remove = (removePost) => {
-    setPosts(posts.filter(p => p.id != removePost.id));
+    setPosts(posts.filter(p => p.id !== removePost.id));
   }
 
   //* Сортировка и поиск
@@ -42,15 +44,15 @@ function App() {
   //* Несколько страниц
   const [pageCurrent, setPageCurrent] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [pageCount, setPageCount] = useState('');
-  let pageArray = getPagination(pageCount);
+  const [pageTotal, setPageTotal] = useState('');
+
 
 
   //* Запрос постов
   const [getPosts, isLoading, error] = useFetching(async () => {
     const response = await PostService.getAll(limit, pageCurrent);
     setPosts(response.data);
-    setPageCount(countPages(response.headers['x-total-count'], limit));
+    setPageTotal(countPages(response.headers['x-total-count'], limit));
   });
 
 
@@ -81,6 +83,12 @@ function App() {
           setFilter={setFilter}
         />
 
+        <Pagination
+          pageTotal={pageTotal}
+          pageCurrent={pageCurrent}
+          setPage={setPageCurrent}
+        />
+
         {
           error
           && <h1>Произошла ошибка {error}</h1>
@@ -90,21 +98,12 @@ function App() {
             ? <div className="center"><Loader /></div>
             : <PostList remove={remove} posts={sortedAndSearchPost} title='Список постов 1' />
         }
-        {pageArray &&
-          <ul className="pagination"> Стр.
-            {pageArray.map((item) =>
-              <li key={item} className={pageCurrent == item
-                ? 'pagination__item pagination__item_active'
-                : 'pagination__item'}
-                onClick={(e) => setPageCurrent(e.target.innerHTML)}
-              >
-                {item}
-              </li>)
-            }
-          </ul>
 
-        }
-
+        <Pagination
+          pageTotal={pageTotal}
+          pageCurrent={pageCurrent}
+          setPage={setPageCurrent}
+        />
 
 
 
