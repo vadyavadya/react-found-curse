@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from "react";
-import usePost from "../hooks/usePosts"
-import { useFetching } from "../hooks/useFetching";
-import PostService from "../API/PostService";
-import countPages from "../utils/pages";
+import React, { useEffect, useState } from "react";
+import Counter from "../components/Counter";
+import InputValue from "../components/InputValue";
+import "../style/App.css"
+import PostList from "../components/PostList";
 import MyButton from "../components/UI/button/MyButton";
+import PostForm from "../components/PostForm";
+import PostFilter from "../components/PostFilter";
+import MyModal from "../components/UI/modal/Modal";
+import { usePost } from "../hooks/usePosts";
+import PostService from "../API/PostService";
+import Loader from "../components/loader/Loader";
+import { useFetching } from "../hooks/useFetching";
+import { countPages } from "../utils/pages";
+import Pagination from "../components/pagination/Pagination";
 
 
 

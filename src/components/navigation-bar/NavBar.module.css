@@ -1,0 +1,9 @@
+.list {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+.panel {
+    background-color: tan;
+    padding: 10px;
+}
