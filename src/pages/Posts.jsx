@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Counter from "../components/Counter";
 import InputValue from "../components/InputValue";
 import "../style/App.css"
@@ -13,6 +13,8 @@ import Loader from "../components/loader/Loader";
 import { useFetching } from "../hooks/useFetching";
 import { countPages } from "../utils/pages";
 import Pagination from "../components/pagination/Pagination";
+import { useObserver } from "../hooks/useObserver";
+import MySelect from "../components/UI/select/MySelect";
 
 
 
@@ -50,13 +52,20 @@ function Posts() {
     //* Запрос постов
     const [getPosts, isLoading, error] = useFetching(async () => {
         const response = await PostService.getAll(limit, pageCurrent);
-        setPosts(response.data);
+        setPosts([...posts, ...response.data]);
         setPageTotal(countPages(response.headers['x-total-count'], limit));
     });
 
+    const lastElement = useRef();
+    console.log(lastElement);
+
+    useObserver(lastElement, pageCurrent < pageTotal, isLoading, () => {
+        setPageCurrent(pageCurrent + 1);
+    })
+
     useEffect(() => {
         getPosts();
-    }, [pageCurrent])
+    }, [pageCurrent, limit])
 
     return (
         <div className="App">
@@ -76,6 +85,17 @@ function Posts() {
                     filter={filter}
                     setFilter={setFilter}
                 />
+                <MySelect
+                    value={limit}
+                    onChange={value => setLimit(value)}
+                    defaultValue={'Кол-во элементов'}
+                    options={[
+                        { value: 5, name: '5' },
+                        { value: 10, name: '10' },
+                        { value: 25, name: '25' },
+                        { value: -1, name: 'Показать все' },
+                    ]}
+                />
 
                 <Pagination
                     pageTotal={pageTotal}
@@ -87,10 +107,11 @@ function Posts() {
                     error
                     && <h1>Произошла ошибка {error}</h1>
                 }
+                <PostList remove={remove} posts={sortedAndSearchPost} title='Список постов 1' />
+                <div ref={lastElement} style={{ height: '20px', background: 'red' }}></div>
                 {
                     isLoading
-                        ? <div className="center"><Loader /></div>
-                        : <PostList remove={remove} posts={sortedAndSearchPost} title='Список постов 1' />
+                    && <div className="center"><Loader /></div>
                 }
 
                 <Pagination

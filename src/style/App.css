@@ -7,6 +7,9 @@ button {
     padding: 5px;
     border-radius: 6px;
 }
+li {
+    list-style: none;
+}
 .container {
     max-width: 600px;
     margin: 0 auto;
@@ -29,6 +32,9 @@ button {
 .post__title {
 }
 .post__text {
+}
+.post__btn {
+    display: flex;
 }
 .remove-btn {
     margin-right: 0.5rem;
