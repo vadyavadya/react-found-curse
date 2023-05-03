@@ -5,9 +5,9 @@
 }
 button {
     padding: 5px;
-    border-radius: 6px;
+    /* border-radius: 6px; */
 }
-li {
+ul {
     list-style: none;
 }
 .container {

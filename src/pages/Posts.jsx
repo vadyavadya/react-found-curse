@@ -57,7 +57,6 @@ function Posts() {
     });
 
     const lastElement = useRef();
-    console.log(lastElement);
 
     useObserver(lastElement, pageCurrent < pageTotal, isLoading, () => {
         setPageCurrent(pageCurrent + 1);

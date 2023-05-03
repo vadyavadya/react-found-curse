@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import MyInput from "../components/input/MyInput";
 import MyButton from "../components/UI/button/MyButton";
 import { AuthContext } from "../context";
@@ -6,16 +6,13 @@ import { AuthContext } from "../context";
 
 
 export default function Login() {
-    const { isAuth, setAuth } = useContext(AuthContext);
-
+    const { setAuth } = useContext(AuthContext);
 
     function login(e) {
         e.preventDefault();
         setAuth(true);
         localStorage.setItem('auth', 'true');
     }
-
-    
 
     return (
         <form onSubmit={login}>
