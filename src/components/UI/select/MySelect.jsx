@@ -4,6 +4,7 @@ const MySelect = ({ options, defaultValue, value, onChange }) => {
 
     return (
         <select
+            style={{ marginTop: '20px' }}
             value={value}
             onChange={e => onChange(e.target.value)}
         >

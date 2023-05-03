@@ -50,21 +50,29 @@ function Posts() {
 
 
     //* Запрос постов
+    // const [getPostsMore, isLoadingMore, errorMore] = useFetching(async () => {
+    //     const response = await PostService.getAll(limit, pageCurrent);
+    //     setPosts([...posts, ...response.data]);
+    //     setPageTotal(countPages(response.headers['x-total-count'], limit));
+    // });
+
     const [getPosts, isLoading, error] = useFetching(async () => {
         const response = await PostService.getAll(limit, pageCurrent);
-        setPosts([...posts, ...response.data]);
+        setPosts([...response.data]);
         setPageTotal(countPages(response.headers['x-total-count'], limit));
     });
 
     const lastElement = useRef();
 
     useObserver(lastElement, pageCurrent < pageTotal, isLoading, () => {
-        setPageCurrent(pageCurrent + 1);
+        setLimit(+limit + 5);
     })
 
     useEffect(() => {
         getPosts();
     }, [pageCurrent, limit])
+
+
 
     return (
         <div className="App">
@@ -89,10 +97,10 @@ function Posts() {
                     onChange={value => setLimit(value)}
                     defaultValue={'Кол-во элементов'}
                     options={[
-                        { value: 5, name: '5' },
-                        { value: 10, name: '10' },
-                        { value: 25, name: '25' },
-                        { value: -1, name: 'Показать все' },
+                        { id: 0, value: 5, name: '5' },
+                        { id: 1, value: 10, name: '10' },
+                        { id: 2, value: 25, name: '25' },
+                        { id: 3, value: -1, name: 'Показать все' },
                     ]}
                 />
 
@@ -107,7 +115,7 @@ function Posts() {
                     && <h1>Произошла ошибка {error}</h1>
                 }
                 <PostList remove={remove} posts={sortedAndSearchPost} title='Список постов 1' />
-                <div ref={lastElement} style={{ height: '20px', background: 'red' }}></div>
+                <div ref={lastElement} style={{ height: '20px', background: 'red' }}>Невидимый элемент. За ним следим чтобы обновить</div>
                 {
                     isLoading
                     && <div className="center"><Loader /></div>

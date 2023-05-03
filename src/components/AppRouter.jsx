@@ -23,6 +23,10 @@ export default function AppRouter() {
             element: <Login />
         },
         {
+            index: true,
+            element: <Navigate to='/login' replace />
+        },
+        {
             path: '*',
             element: <Navigate to='/login' replace />
         },
@@ -33,6 +37,10 @@ export default function AppRouter() {
             {
                 path: 'home',
                 element: <Index />,
+            },
+            {
+                index: true,
+                element: <Navigate to='/home' replace />
             },
             {
                 path: 'posts',
@@ -76,7 +84,7 @@ export default function AppRouter() {
                     ],
                 },
             ],
-        }
+        },
     ]);
 
     return (
