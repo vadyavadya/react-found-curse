@@ -1,6 +1,6 @@
 # Курс React
 
-проект выполнен при прохождении [курса](https://www.youtube.com/watch?v=GNrdg3PzpJQ) по реакту
+проект выполнен при прохождении [курса](https://www.youtube.com/watch?v=GNrdg3PzpJQ) по реакту, [демонстрация](https://vadyavadya.github.io/react-found-curse/)
 
 Проект учебный для изучения реакта и только ради этого. Он не красивый и реализация некоторых функций далека от идеала, но зато можно посмотреть, что я знаю, как делать некоторые функции, от чего оттолкнуться, куда смотреть и что искать.
 
@@ -42,13 +42,13 @@
 
 ### 1. Требутся клонировать репозитарий
 
-	git clone https://github.com/vadyavadya/react-app.git
+	git clone https://github.com/vadyavadya/react-found-curse.git
 
 ### 2. Далее перейти в папку  
 	
-	cd react-app
+	cd react-found-curse
 
-### 3. Запустиь установку пакетов
+### 3. Запустить установку пакетов
 
 	npm i
 
