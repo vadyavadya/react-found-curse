@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/react-found-curse/static/css/main.11c8fdf3.css",
+    "main.js": "/react-found-curse/static/js/main.67b33142.js",
+    "index.html": "/react-found-curse/index.html",
+    "main.11c8fdf3.css.map": "/react-found-curse/static/css/main.11c8fdf3.css.map",
+    "main.67b33142.js.map": "/react-found-curse/static/js/main.67b33142.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.11c8fdf3.css",
+    "static/js/main.67b33142.js"
+  ]
+}
