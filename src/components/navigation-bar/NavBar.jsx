@@ -26,9 +26,11 @@ export default function NavBar() {
             </li>
             {
               isAuth
-              && (<li>
-                <MyButton onClick={exit}>Выйти</MyButton>
-              </li>)
+              && (
+                <li>
+                  <MyButton onClick={exit}>Выйти</MyButton>
+                </li>
+              )
             }
           </ul>
         </nav>

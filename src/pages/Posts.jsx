@@ -18,8 +18,6 @@ import MySelect from "../components/UI/select/MySelect";
 
 
 
-
-
 function Posts() {
 
     const [posts, setPosts] = useState([]);
@@ -70,7 +68,7 @@ function Posts() {
 
     useEffect(() => {
         getPosts();
-    }, [pageCurrent, limit])
+    }, [limit, pageCurrent])
 
 
 
@@ -135,7 +133,7 @@ function Posts() {
             </div>
 
         </div>
-    );
+    )
 }
 
 export default Posts;
