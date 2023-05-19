@@ -13,64 +13,103 @@ import Loader from "../components/loader/Loader";
 import { useFetching } from "../hooks/useFetching";
 import { countPages } from "../utils/pages";
 import Pagination from "../components/pagination/Pagination";
-import { useObserver } from "../hooks/useObserver";
+import { useObserver } from "../hooks/useObserver.jsx";
 import MySelect from "../components/UI/select/MySelect";
 
 
 
 function Posts() {
 
-    const [posts, setPosts] = useState([]);
+    const [postsShow, setPostsShow] = useState([]);
+    const [limitShow, setLimitShow] = useState(10);
+    const [pageShow, setPageShow] = useState(1);
+    const [pageTotal, setPageTotal] = useState('');
+
+    //* Несколько страниц
+    const [downloadPosts, setDownloadPosts] = useState([]);
+    const [limitDownload, setLimitDownload] = useState(10);
+    const [pageDownload, setPageDownload] = useState(1);
+    const [pageTotalDownload, setPageTotalDownload] = useState('');
+
+    const [getPosts, isLoading, error] = useFetching(async () => {
+        const response = await PostService.getAll(limitDownload, pageDownload);
+        setDownloadPosts([...response.data]);
+        if (limitShow === limitDownload) {
+            setPageTotal(countPages(response.headers['x-total-count'], limitShow));
+            setPageTotalDownload(countPages(response.headers['x-total-count'], limitShow))
+        } else {
+            setPageTotalDownload(countPages(response.headers['x-total-count'], limitDownload))
+        }
+    });
+
+    const lastElement = useRef();
+
+
+
+    const setPageCurrentPagination = async (page) => {
+        setPageShow(page);
+    }
+
+    useEffect(() => {
+        getPosts();
+        // eslint-disable-next-line
+    }, [limitDownload, pageDownload])
+
+    useEffect(() => {
+        if (limitShow === limitDownload) {
+            setPostsShow([...downloadPosts]);
+        } else {
+            setPostsShow([...postsShow, ...downloadPosts]);
+        }
+        // eslint-disable-next-line
+    }, [downloadPosts])
+
+    useEffect(() => {
+        setPageDownload(pageShow);
+        setLimitDownload(limitShow);
+        // eslint-disable-next-line
+    }, [pageShow])
+
+    useEffect(() => {
+        setPageShow(1);
+        setPageDownload(1);
+        setLimitDownload(limitShow);
+    }, [limitShow])
+
+    /*
+        Изначально было что нажимаешь на пагинацию она меняет страницу и а при смене страницы обновляется контент
+        а динамическая пагинация тоже меняет страницы но добавляет посты в список а не затирает их 
+    */
 
     const addPost = (newPost) => {
-        setPosts([...posts, { ...newPost, id: Date.now() }]);
+        setPostsShow([...postsShow, { ...newPost, id: Date.now() }]);
         setModal(false);
     }
 
     const remove = (removePost) => {
-        setPosts(posts.filter(p => p.id !== removePost.id));
+        setPostsShow(postsShow.filter(p => p.id !== removePost.id));
     }
 
     //* Сортировка и поиск
 
     const [filter, setFilter] = useState({ sort: '', query: '', })
 
-    const sortedAndSearchPost = usePost(posts, filter.sort, filter.query)
+    const sortedAndSearchPost = usePost(postsShow, filter.sort, filter.query)
+
+
+    useObserver(lastElement, pageDownload < pageTotalDownload && !filter.query, isLoading, () => {
+        let subdownload = 2;
+        if (postsShow.length === +limitDownload) {
+            let pD = Math.floor(pageShow * limitShow / subdownload) + 1;
+            setLimitDownload(subdownload);
+            setPageDownload(pD);
+        } else {
+            setPageDownload(pageDownload + 1);
+        }
+    })
 
     //* Модальное окно
     const [modal, setModal] = useState(false);
-
-    //* Несколько страниц
-    const [pageCurrent, setPageCurrent] = useState(1);
-    const [limit, setLimit] = useState(10);
-    const [pageTotal, setPageTotal] = useState('');
-
-
-
-    //* Запрос постов
-    // const [getPostsMore, isLoadingMore, errorMore] = useFetching(async () => {
-    //     const response = await PostService.getAll(limit, pageCurrent);
-    //     setPosts([...posts, ...response.data]);
-    //     setPageTotal(countPages(response.headers['x-total-count'], limit));
-    // });
-
-    const [getPosts, isLoading, error] = useFetching(async () => {
-        const response = await PostService.getAll(limit, pageCurrent);
-        setPosts([...response.data]);
-        setPageTotal(countPages(response.headers['x-total-count'], limit));
-    });
-
-    const lastElement = useRef();
-
-    useObserver(lastElement, pageCurrent < pageTotal, isLoading, () => {
-        setLimit(+limit + 5);
-    })
-
-    useEffect(() => {
-        getPosts();
-    }, [limit, pageCurrent])
-
-
 
     return (
         <div className="App">
@@ -91,8 +130,8 @@ function Posts() {
                     setFilter={setFilter}
                 />
                 <MySelect
-                    value={limit}
-                    onChange={value => setLimit(value)}
+                    value={limitShow}
+                    onChange={value => setLimitShow(value)}
                     defaultValue={'Кол-во элементов'}
                     options={[
                         { id: 0, value: 5, name: '5' },
@@ -104,8 +143,8 @@ function Posts() {
 
                 <Pagination
                     pageTotal={pageTotal}
-                    pageCurrent={pageCurrent}
-                    setPage={setPageCurrent}
+                    pageCurrent={pageShow}
+                    setPage={setPageCurrentPagination}
                 />
 
                 {
@@ -121,14 +160,15 @@ function Posts() {
 
                 <Pagination
                     pageTotal={pageTotal}
-                    pageCurrent={pageCurrent}
-                    setPage={setPageCurrent}
+                    pageCurrent={pageShow}
+                    setPage={setPageCurrentPagination}
                 />
 
 
-
+                <h2>Два независимых счетчика</h2>
                 <Counter />
                 <Counter />
+                <h2>Меняем значение заголовка от значение в инпуте</h2>
                 <InputValue text='Значение по умолчанию' />
             </div>
 
@@ -137,3 +177,4 @@ function Posts() {
 }
 
 export default Posts;
+

@@ -10,12 +10,11 @@ export function useObserver(ref, canLoad, isLoading, callback) {
         var cd = function (entries, observer) {
             if (entries[0].isIntersecting && canLoad) {
                 callback();
-
             }
         };
         observer.current = new IntersectionObserver(cd);
         observer.current.observe(ref.current);
 
-    }, [isLoading])
+    })
 
 }

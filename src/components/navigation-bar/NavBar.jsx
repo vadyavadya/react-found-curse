@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import cls from "./NavBar.module.css"
 import MyButton from "../UI/button/MyButton";
 import { AuthContext } from "../../context";
@@ -14,28 +14,23 @@ export default function NavBar() {
 
 
   return (
-    <>
-      <div className={cls.container}>
-        <nav className={cls.panel} >
-          <ul className={cls.list}>
+    <nav className={cls.panel} >
+      <ul className={cls.list}>
+        <li>
+          <Link className={cls.item} to={'/home'}>Главная</Link>
+        </li>
+        <li>
+          <Link className={cls.item} to={'/posts'}>Посты</Link>
+        </li>
+        {
+          isAuth
+          && (
             <li>
-              <Link className={cls.item} to={'/home'}>Главная</Link>
+              <MyButton onClick={exit}>Выйти</MyButton>
             </li>
-            <li>
-              <Link className={cls.item} to={'/posts'}>Посты</Link>
-            </li>
-            {
-              isAuth
-              && (
-                <li>
-                  <MyButton onClick={exit}>Выйти</MyButton>
-                </li>
-              )
-            }
-          </ul>
-        </nav>
-        <Outlet />
-      </div>
-    </>
+          )
+        }
+      </ul>
+    </nav>
   )
 }

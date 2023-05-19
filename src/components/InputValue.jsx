@@ -7,7 +7,7 @@ const InputValue = ({ text }) => {
 
   return (
     <div>
-      <h2>{value1}</h2>
+      <h3>{value1}</h3>
       <input
         type='text'
         value={value1}

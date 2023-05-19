@@ -11,7 +11,7 @@ export default function App() {
       setAuth(true);
     }
     setLoading(false);
-  })
+  }, [])
 
   return (
     <AuthContext.Provider value={

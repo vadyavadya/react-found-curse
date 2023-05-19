@@ -12,19 +12,19 @@ export default function EditPost() {
     const [comments, setComments] = useState([]);
 
     //* Запрос постов
-    const [fetchingByPost, isLoading, error] = useFetching(async () => {
+    const [fetchingByPost, isLoading] = useFetching(async () => {
         const response = await PostService.getById(params.id);
         setPost(response.data);
     });
 
-    const [fetchingByComments, isLoadingComments, errorComments] = useFetching(async () => {
+    const [fetchingByComments, isLoadingComments] = useFetching(async () => {
         const response = await PostService.getById(params.id + '/comments');
         setComments(response.data);
     });
     useEffect(() => {
         fetchingByPost();
         fetchingByComments();
-    }, [])
+    })
 
     return (
 
